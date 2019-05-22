@@ -40,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        super.onCreate(savedInstanceState);
         //Uses DataBinding to set the content view
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -60,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             query = savedInstanceState.getString(LAST_SEARCH_QUERY, DEFAULT_QUERY);
         }
+        //Post the query to be searched
+        mViewModel.searchRepo(query);
 
+        //Initialize the EditText for Search Actions
+        initSearch(query);
     }
 
     /**
