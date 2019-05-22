@@ -1,0 +1,10 @@
+<!--
+  ~ Created by Tareq Islam on 5/22/19 12:52 PM
+  ~
+  ~  Last modified 5/22/19 11:09 AM
+  -->
+
+<resources>
+    <string name="app_name">PagingRepo</string>
+    <string name="no_results">No results %s</string>
+</resources>
