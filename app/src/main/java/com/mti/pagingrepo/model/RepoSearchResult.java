@@ -9,6 +9,8 @@ package com.mti.pagingrepo.model;
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.PagedList;
 
+import com.mti.pagingrepo.data.RepoBoundaryCallback;
+
 /***
  * Created by mtita on 22,May,2019.
  */
@@ -19,9 +21,13 @@ public class RepoSearchResult {
     //LiveData for Network Errors
     private final LiveData<String> networkError;
 
-    public RepoSearchResult(LiveData<PagedList<Repo>> data, LiveData<String> networkError) {
+    //LiveData for Network Errors
+    private final LiveData<RepoBoundaryCallback.NETWORK_STATE> networkState;
+
+    public RepoSearchResult(LiveData<PagedList<Repo>> data, LiveData<String> networkError, LiveData<RepoBoundaryCallback.NETWORK_STATE> networkState) {
         this.data = data;
         this.networkError = networkError;
+        this.networkState = networkState;
     }
 
     public LiveData<PagedList<Repo>> getData() {
@@ -30,5 +36,9 @@ public class RepoSearchResult {
 
     public LiveData<String> getNetworkError() {
         return networkError;
+    }
+
+    public LiveData<RepoBoundaryCallback.NETWORK_STATE> getNetworkState() {
+        return networkState;
     }
 }

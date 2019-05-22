@@ -14,6 +14,7 @@ import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
 
 import com.mti.pagingrepo.data.GithubRepository;
+import com.mti.pagingrepo.data.RepoBoundaryCallback;
 import com.mti.pagingrepo.model.Repo;
 import com.mti.pagingrepo.model.RepoSearchResult;
 
@@ -45,6 +46,12 @@ public class SearchRepositoriesViewModel extends ViewModel {
             repoSearchResult -> repoSearchResult.getNetworkError()
     );
 
+    //Applying transformation to get Live Network State from the RepoSearchResult
+    private LiveData<RepoBoundaryCallback.NETWORK_STATE> networkStates = Transformations.switchMap(repoReuslt,
+            repoSearchResult -> repoSearchResult.getNetworkState()
+    );
+
+
     public SearchRepositoriesViewModel(GithubRepository githubRepository) {
         this.githubRepository = githubRepository;
     }
@@ -57,6 +64,9 @@ public class SearchRepositoriesViewModel extends ViewModel {
         return networkErrors;
     }
 
+    public LiveData<RepoBoundaryCallback.NETWORK_STATE> getNetworkStates() {
+        return networkStates;
+    }
 
     /**
      * Search a repository based on a query string.

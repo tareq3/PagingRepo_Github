@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mti.pagingrepo.Injection;
 import com.mti.pagingrepo.R;
+import com.mti.pagingrepo.data.RepoBoundaryCallback;
 import com.mti.pagingrepo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        super.onCreate(savedInstanceState);
         //Uses DataBinding to set the content view
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -61,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
             query = savedInstanceState.getString(LAST_SEARCH_QUERY, DEFAULT_QUERY);
         }
 
+        //Post the query to be searched
+        mViewModel.searchRepo(query);
+
+        //Initialize the EditText for Search Actions
+        initSearch(query);
     }
 
     /**
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         //Subscribing to receive the new PagedList Repos
         mViewModel.getRepos().observe(this, repos -> {
             if (repos != null) {
-                Log.d(LOG_TAG, "initAdapter: Repo List size: " + repos.size());
+                Log.d("tareq_test", "initAdapter: Repo List size: " + repos.size());
                 showEmptyList(repos.size() == 0);
                 mReposAdapter.submitList(repos);
             }
@@ -94,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
         //Subscribing to receive the recent Network Errors if any
         mViewModel.getNetworkErrors().observe(this, errorMsg -> {
             Toast.makeText(this, "\uD83D\uDE28 Wooops " + errorMsg, Toast.LENGTH_LONG).show();
+        });
+
+        //Subscribing to receive the recent Network State if any
+        mViewModel.getNetworkStates().observe(this, network_state -> {
+            if(network_state.equals(RepoBoundaryCallback.NETWORK_STATE.LOADING)){
+                mMainBinding.progressBar.setVisibility(View.VISIBLE);
+            }else{
+                mMainBinding.progressBar.setVisibility(View.GONE);
+            }
         });
     }
 

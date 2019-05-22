@@ -23,6 +23,10 @@ import java.util.List;
  */
 public class RepoBoundaryCallback extends PagedList.BoundaryCallback<Repo> implements GithubServiceClient.ApiCallback {
 
+    public enum NETWORK_STATE{
+        LOADING, LOADED, ERROR
+    }
+
     //Constant used for logs
     private static final String LOG_TAG = RepoBoundaryCallback.class.getSimpleName();
     // Constant for the Number of items in a page to be requested from the Github API
@@ -38,6 +42,11 @@ public class RepoBoundaryCallback extends PagedList.BoundaryCallback<Repo> imple
     //LiveData of network error
     private MutableLiveData<String> networkError = new MutableLiveData<>();
 
+    //LiveData of network State
+    private MutableLiveData<NETWORK_STATE> networkState= new MutableLiveData<>();
+
+
+
     public RepoBoundaryCallback(String query, GithubService githubService, GithubLocalCache localCache) {
         this.query = query;
         this.githubService = githubService;
@@ -49,6 +58,9 @@ public class RepoBoundaryCallback extends PagedList.BoundaryCallback<Repo> imple
     }
 
 
+    public MutableLiveData<NETWORK_STATE> getNetworkState() {
+        return networkState;
+    }
 
     /**
      * Method to request data from Github API for the given search query
@@ -63,6 +75,7 @@ public class RepoBoundaryCallback extends PagedList.BoundaryCallback<Repo> imple
         //set to true as we are starting the network request
         isRequestInProgress = true;
 
+        networkState.postValue(NETWORK_STATE.LOADING);
         //CAlling the client API to retrieve the repos for the given query
         GithubServiceClient.searchRepos(githubService, query, lastRequestedPage, NETWORK_PAGE_SIZE, this);
     }
@@ -103,6 +116,8 @@ public class RepoBoundaryCallback extends PagedList.BoundaryCallback<Repo> imple
      */
     @Override
     public void onSuccess(List<Repo> items) {
+
+        networkState.postValue(NETWORK_STATE.LOADED);
         //Inserting records in the database thread
         localCache.insert(items, () -> {
             //Updating the last requested page number when the request was successful

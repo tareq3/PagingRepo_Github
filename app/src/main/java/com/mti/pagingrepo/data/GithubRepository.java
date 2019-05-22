@@ -47,6 +47,8 @@ public class GithubRepository {
 
         LiveData<String> networkErrors = boundaryCallback.getNetworkError();
 
+        LiveData<RepoBoundaryCallback.NETWORK_STATE> network_stateLiveData = boundaryCallback.getNetworkState();
+
         // Set the Page size for the Paged list
         PagedList.Config pagedConfig = new PagedList.Config.Builder()
                 .setPageSize(DATABASE_PAGE_SIZE)
@@ -58,7 +60,7 @@ public class GithubRepository {
                 .build();
 
         // Get the Search result with the network errors exposed by the boundary callback
-        return new RepoSearchResult(data, networkErrors);
+        return new RepoSearchResult(data, networkErrors,network_stateLiveData);
     }
 
 }
