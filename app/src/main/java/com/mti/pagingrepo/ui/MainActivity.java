@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -72,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initRecyclerView() {
         //Add dividers between RecyclerView's row items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        mMainBinding.list.addItemDecoration(dividerItemDecoration);
+        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+      //  mMainBinding.list.addItemDecoration(dividerItemDecoration);
+        mMainBinding.list.setLayoutManager(new GridLayoutManager(this,2, GridLayoutManager.VERTICAL, false));
 
         //Initializing Adapter
         initAdapter();
